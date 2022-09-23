@@ -1,0 +1,7 @@
+---
+# defaults file for mysql
+mysql_user_login: wordpress
+mysql_user_password: wordpress
+mysql_root_password: "R00T_P@SS0rD"
+ansible_python_interpreter: /usr/bin/python3
+db_name: wordpress

@@ -1,0 +1,33 @@
+---
+    - name: "Check if Firewalld is absent"
+      package:
+         name: "firewalld"
+         state: absent
+      register: install_firewalld
+
+    - name: "Check if epel-release is absent"
+      package:
+         name: epel-release
+         state: absent
+      register: install_epel
+
+    - name: "Installation firewalld if not present"
+      yum:
+         name: firewalld
+         state: present
+      when: install_firewalld
+
+    - name: "Start and enable firewalld service"
+      service:
+         name: firewalld
+         enabled: yes
+         state: started
+    - name: "Install the remi repo"
+      yum:
+         name: https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+         state: present
+      when: install_epel
+    - name: "Import gpg key"
+      rpm_key:
+         state: present
+         key: https://rpms.remirepo.net/RPM-GPG-KEY-remi
