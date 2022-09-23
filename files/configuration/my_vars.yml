@@ -1,0 +1,9 @@
+system_user: vagrant
+compose_project_dir: /home/{{ system_user }}/compose-wordpress
+domain: local.domain
+stage: staging
+wp_version: 5.2.4
+wp_db_user: wordpress 
+wp_db_name: wordpress
+wp_db_tb_pre: wp_
+wp_db_host: db

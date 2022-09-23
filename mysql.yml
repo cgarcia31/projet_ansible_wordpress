@@ -1,0 +1,79 @@
+---
+- name: "Installation de mysql"
+  hosts: prod
+  become: yes
+  vars_files:
+      - files/secrets/credentials.yml
+  vars:
+      mysql_user_login: wordpress
+      mysql_root_password: "R00T_P@SS0rD"
+      mysql_user_password: wordpress
+      ansible_python_interpreter: /usr/bin/python3
+      db_name: wordpress
+  pre_tasks:
+      - name: "Installation du repo"
+        yum:
+           name: http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+           state: present
+      - name: "Import gpg key"
+        rpm_key:
+            state: present
+            key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+      - name: "Install python3-PyMySQL library"
+        ansible.builtin.pip:
+          name:  PyMySQL
+          state: present
+  #        executable: pip3
+  tasks:
+    - name: "Install MySQL Server"
+      yum:
+        name: mysql-community-server
+      register: fresh_install
+      when: ansible_os_family == "RedHat"
+    - name: "Start MySQL Server"
+      service:
+        name: mysqld
+        state: started
+        enabled: yes
+    - name: Get temporary MySQL root password
+      shell: grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'
+      when: fresh_install.changed
+      register: mysql_root_temp_password
+      #mysql_root_temp_password.stdout
+
+    - name: "Init root password"
+      shell: mysql -u root --connect-expired-password --password="{{mysql_root_temp_password.stdout}}" -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '{{mysql_root_password}}';"
+      when: fresh_install.changed
+
+    - name: "Start MySQL Server"
+      service:
+        name: mysqld
+        state: restarted
+        enabled: yes
+
+    - name: check if user exists
+      mysql_user:
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+        name: "{{ mysql_user_login }}"
+        state: absent
+      register: user_absent
+
+    - name: "Create a new database with name 'wordpress'"
+      mysql_db:
+        name: "{{db_name}}"
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+        state: present
+        encoding: utf8mb4
+        collation: utf8mb4_unicode_ci
+      when: user_absent
+
+    - name: Create MY_DBA user in MySQL and grant privileges
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: "{{ mysql_user_login }} "
+        password: "{{ mysql_user_password }}"
+        host: 'localhost'
+        priv: "{{db_name}}.*:ALL"

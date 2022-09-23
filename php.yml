@@ -1,0 +1,82 @@
+---
+- name: Install apache and php7 Centos 7 machine
+  hosts: all
+  become: yes
+  vars_files:
+      - files/secrets/credentials.yml
+  pre_tasks:
+    - name: "Check if Firewalld is absent"
+      package:
+         name: "firewalld"
+         state: absent
+      register: install_firewalld
+
+    - name: "Check if epel-release is absent"
+      package:
+         name: epel-release
+         state: absent
+      register: install_epel
+
+    - name: "Installation firewalld if not present"
+      yum:
+         name: firewalld
+         state: present
+      when: install_firewalld
+
+    - name: "Start and enable firewalld service"
+      service:
+         name: firewalld
+         enabled: yes
+         state: started
+    - name: "Install the remi repo"
+      yum:
+         name: https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+         state: present
+      when: install_epel
+    - name: "Import gpg key"
+      rpm_key:
+         state: present
+         key: https://rpms.remirepo.net/RPM-GPG-KEY-remi
+  tasks:
+    - name: "Install httpd"
+      yum:
+        name: httpd
+        state: present
+    - name: "Start httpd"
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: "permit traffic in public zone for https service"
+      firewalld:
+        service: https
+        zone: public
+        permanent: yes
+        immediate: yes
+        state: enabled
+    - name: "permit traffic in public zone for http service"
+      firewalld:
+        service: http
+        zone: public
+        permanent: yes
+        immediate: yes
+        state: enabled
+    - name: "Install php 7.4 and necessary extensions"
+      yum:
+        name:
+          - php
+          - php-bz2
+          - php-mysql
+          - php-curl
+          - php-gd
+          - php-intl
+          - php-common
+          - php-mbstring
+          - php-xml
+        enablerepo: remi-php74
+        update_cache: true
+
+    - name: "Restart apache"
+      service:
+        name: httpd
+        state: restarted

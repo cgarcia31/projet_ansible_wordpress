@@ -1,0 +1,3 @@
+ansible_host: 192.168.99.11
+ansible_sudo_pass: "{{ansible_sudo_pass_client1}}"
+
