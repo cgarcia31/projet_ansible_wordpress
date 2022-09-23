@@ -1,0 +1,16 @@
+---
+  - name: Add a virtual host 
+    template:
+       src: "virtual_host.j2"
+       dest: "/etc/httpd/conf.d/{{ wordpress_host }}"
+       owner: root
+       group: root
+       mode: '0755'
+    register: add_virtual_host
+ 
+  - name: "restart httpd if virtual host is installed or updated else skip"
+    service:
+       name: httpd
+       state: restarted
+       enabled: yes
+    when: add_virtual_host.changed

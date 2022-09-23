@@ -1,0 +1,30 @@
+    - name: "Install MySQL Server"
+      yum:
+        name: mysql-community-server
+      register: fresh_install
+      when: ansible_facts.packages["python3-pip"] is undefined
+
+    - name: "Start MySQL Server"
+      service:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    - name: Get temporary MySQL root password
+      shell: grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'
+      when: ansible_facts.packages["python3-pip"] is undefined
+      register: mysql_root_temp_password
+      #mysql_root_temp_password.stdout
+
+    - name: "Init root password"
+      shell: mysql -u root --connect-expired-password --password="{{mysql_root_temp_password.stdout}}" -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '{{mysql_root_password}}';"
+      when: ansible_facts.packages["python3-pip"] is undefined
+      register: init_root_password
+
+    - name: "Restart MySQL Server"
+      service:
+        name: mysqld
+        state: restarted
+        enabled: yes
+      when: init_root_password
+

@@ -1,0 +1,28 @@
+---
+    - name: "Install httpd"
+      yum:
+        name: httpd
+        state: present
+      when: ansible_facts.packages["httpd"] is undefined
+
+    - name: "Start httpd"
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: "permit traffic in public zone for https service"
+      firewalld:
+        service: https
+        zone: public
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: "permit traffic in public zone for http service"
+      firewalld:
+        service: http
+        zone: public
+        permanent: yes
+        immediate: yes
+        state: enabled

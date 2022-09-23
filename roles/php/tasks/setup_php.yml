@@ -1,0 +1,22 @@
+---
+    - name: "Install php 7.4 and necessary extensions"
+      yum:
+        name:
+          - php
+          - php-bz2
+          - php-mysql
+          - php-curl
+          - php-gd
+          - php-intl
+          - php-common
+          - php-mbstring
+          - php-xml
+        enablerepo: remi-php74
+        update_cache: true
+      register: install_php
+ 
+    - name: "Restart apache if php is installed"
+      service:
+        name: httpd
+        state: restarted
+      when: install_php.changed

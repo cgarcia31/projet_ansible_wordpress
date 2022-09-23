@@ -1,0 +1,9 @@
+---
+  - name: Configure wp-config.php
+    template:
+       src: "wp-config.php.j2"
+       dest: "/var/www/html/wordpress/wp-config.php"
+       owner: root
+       group: root
+       mode: '0755'
+

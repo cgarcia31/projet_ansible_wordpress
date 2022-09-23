@@ -1,4 +1,5 @@
 ---
 # tasks file for php
 - import_tasks: install_requirements.yml
-- import_tasks: php.yml
+- import_tasks: setup_httpd.yml
+- import_tasks: setup_php.yml

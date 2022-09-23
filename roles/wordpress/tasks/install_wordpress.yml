@@ -1,0 +1,10 @@
+---
+  - name: "Download and unarchive latest version of wordpress in /var/www/html/wordpress"
+    unarchive:
+       src: https://wordpress.org/latest.tar.gz
+       dest: "/var/www/html"
+       remote_src: yes
+       owner: apache
+       group: apache
+       mode: "755"
+

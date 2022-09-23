@@ -1,4 +1,6 @@
 ---
 # tasks file for mysql
 - import_tasks: install_requirements.yml
-- import_tasks: mysql.yml
+- import_tasks: setup_mysql.yml
+- import_tasks: add_database.yml
+- import_tasks: add_user.yml

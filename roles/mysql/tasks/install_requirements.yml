@@ -1,17 +1,25 @@
 ---
+      - name: get the rpm or apt package facts
+        package_facts:
+          manager: "auto"
+
       - name: "Installation du repo"
         yum:
            name: http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
            state: present
+        when: ansible_facts.packages["epel-release"] is undefined
+
       - name: "Import gpg key"
         rpm_key:
             state: present
             key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+        when: ansible_facts.packages["mysql57-community-release"] is undefined
 
       - name: 
         yum:
           name: python3-pip
           state: present
+        when: ansible_facts.packages["python3-pip"] is undefined
 
       - name: "Install python3-PyMySQL library"
         ansible.builtin.pip:

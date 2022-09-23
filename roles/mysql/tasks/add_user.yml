@@ -1,0 +1,8 @@
+    - name: "Create {{mysql_user_login}} in MySQL and grant privileges for {{db_name}}"
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: "{{ mysql_user_login }} "
+        password: "{{ mysql_user_password }}"
+        host: 'localhost'
+        priv: "{{db_name}}.*:ALL"
