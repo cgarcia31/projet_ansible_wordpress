@@ -1,2 +1,3 @@
 ---
 # tasks file for wordpress
+- import_tasks: wordpress.yml

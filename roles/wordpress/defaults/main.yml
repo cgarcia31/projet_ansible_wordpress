@@ -1,2 +1,10 @@
 ---
 # defaults file for wordpress
+wordpress_host: myhostname
+wordpress_port: 80
+db_name: wordpress
+mysql_user_login: wordpress
+mysql_user_password: wordpress
+db_host: localhost
+ansible_python_interpreter: /usr/bin/python
+

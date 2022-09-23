@@ -3,11 +3,13 @@
         name: mysql-community-server
       register: fresh_install
       when: ansible_os_family == "RedHat"
+
     - name: "Start MySQL Server"
       service:
         name: mysqld
         state: started
         enabled: yes
+
     - name: Get temporary MySQL root password
       shell: grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'
       when: fresh_install.changed
@@ -31,6 +33,7 @@
         name: "{{ mysql_user_login }}"
         state: absent
       register: user_absent
+
 
     - name: "Create a new database with name 'wordpress'"
       mysql_db:

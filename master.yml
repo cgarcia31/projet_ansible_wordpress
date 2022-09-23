@@ -2,7 +2,7 @@
   hosts: all
   become: true
   vars_files:
-    - files/default.yml
+  #  - files/default.yml
     - files/secrets/credentials.yml
   roles:
     - role: php
