@@ -21,4 +21,3 @@ Open the browser and go to the page: http://YOURCLIENTIP/wordpress
 * https management with let's encrypt
 * Configuration for different operating systems
 * Modify apache so that the virtualhost is the default when accessing via ip
-* 
