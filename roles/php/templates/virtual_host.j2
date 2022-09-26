@@ -1,0 +1,14 @@
+<VirtualHost *:{{ server_port }}>
+   ServerName {{ server_name }}
+   ServerAlias {{ server_alias}}
+   DocumentRoot /var/www/html/{{ http_directory }}
+   ErrorLog /var/log/httpd/error.log
+   CustomLog /var/log/httpd/access.log combined
+ 
+   <Directory /var/www/html/{{ http_directory }}>
+         Options Indexes FollowSymLinks
+         AllowOverride all
+         Require all granted
+   </Directory>
+</VirtualHost>
+

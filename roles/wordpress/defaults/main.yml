@@ -1,7 +1,10 @@
 ---
 # defaults file for wordpress
-wordpress_host: myhostname
-wordpress_port: 80
+server_host: myhostname
+server_port: 80
+server_name: wordpress
+server_alias: www.wordpress.local.domain
+http_directory: wordpress
 db_name: wordpress
 mysql_user_login: wordpress
 mysql_user_password: wordpress

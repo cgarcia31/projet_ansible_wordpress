@@ -7,13 +7,14 @@
         yum:
            name: http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
            state: present
-        when: ansible_facts.packages["epel-release"] is undefined
+        register: install_mysql
+        when: ansible_facts.packages["mysql57-community-release"] is undefined
 
       - name: "Import gpg key"
         rpm_key:
             state: present
             key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-        when: ansible_facts.packages["mysql57-community-release"] is undefined
+        when: install_mysql
 
       - name: 
         yum:

@@ -1,5 +1,8 @@
 ---
 # tasks file for php
 - import_tasks: install_requirements.yml
+  when: ansible_facts['os_family']|lower == 'redhat'
 - import_tasks: setup_httpd.yml
+  when: ansible_facts['os_family']|lower == 'redhat'
 - import_tasks: setup_php.yml
+  when: ansible_facts['os_family']|lower == 'redhat'

@@ -1,4 +1,12 @@
 ---
+  - name: Create mysql database
+    import_role: 
+        name: mysql
+        tasks_from: add_database.yml
+  - name: Create mysql user
+    import_role: 
+        name: mysql
+        tasks_from: add_user.yml
   - name: Configure wp-config.php
     template:
        src: "wp-config.php.j2"
@@ -6,4 +14,7 @@
        owner: root
        group: root
        mode: '0755'
-
+  - name: Add Virtual host
+    import_role:
+        name: php
+        tasks_from: add_virtualhost.yml

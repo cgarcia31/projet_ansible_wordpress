@@ -2,4 +2,3 @@
 # tasks file for wordpress
 - import_tasks: install_wordpress.yml
 - import_tasks: configure_wordpress.yml
-- import_tasks: configure_virtualhost.yml
